@@ -711,6 +711,7 @@ def gameloop():
 world1 = "incomplete"
 level1()
 gameloop()
+
 if level1 == "complete":
     level2()
     gameloop()

@@ -4,19 +4,33 @@ global spikemonster_list
 global monster_list
 global tile_list
 global sky_list
+global level_1
+global bullet_list
 spikemonster_list = []
 monster_list = []
 tile_list = []
+bullet_list = []
 
 class Character:
     def __init__(self, x, y):
+        
         self.image = assetLibrary['mikenewright']
         self.rect = pygame.Rect(x, y, 16, 30)
+        self.face = 'right'
         self.jump = 0
         self.keyRelease = True
         self.gameOver = False
         self.fall = False
-    
+        self.state = "play"
+
+    def shoot(self):
+        bullet_image = assetLibrary['bullet']
+        bullet_pos = pygame.Rect(self.rect.x, self.rect.y, self.rect.width, self.rect.height)
+        bullet_list.append(bullet_pos)
+
+    def getPlayerPosition(self):
+        return self.rect.x, self.rect.y
+        
     def move(self, direction_x, direction_y, tiles):
         """Move player"""
         if direction_x != 0:
@@ -30,9 +44,11 @@ class Character:
     
         if direction_x > 0:
             self.image = assetLibrary['mikenewright']
+            self.face = 'right'
 
         if direction_x < 0:
             self.image = assetLibrary['mikenewleft']
+            self.face = 'left'
 
     def moveForward(self, direction_x, direction_y, tiles):
         """"""
@@ -42,7 +58,7 @@ class Character:
         for tile in tiles:
             if self.rect.colliderect(tile.rect):
                 if direction_x > 0:
-                    self.rect.right = tile.rect.left
+                    self.rect.right = tile.rect.left    
                 elif direction_x < 0:
                     self.rect.left = tile.rect.right
                 elif direction_y > 0:
@@ -63,18 +79,20 @@ class Character:
             if self.keyRelease: 
                 if self.jump < 20:
                     self.move(0,-5, map_level.tiles)
-                    self.jump += 1 
+                    self.jump += 1
+        if key[pygame.K_SPACE]:
+            self.shoot() 
         if self.rect.bottom < 480:
                 self.move(0,2.5, map_level.tiles)
         if key[pygame.K_UP] == False:
             self.keyRelease = True
-    
-
 
     def die(self):
         for spikemonsters in spikemonster_list:
             if self.rect.colliderect(spikemonsters.rect):
                 return True
+        if self.rect.bottom >= 480:
+            return True
 
 class Tile():
     def __init__(self, position, image_name):
@@ -173,12 +191,14 @@ class Door():
             if self.level == "1":
                 global level_1
                 level_1 = "finish"
+                player.state = "finish1"
             elif self.level == "2":
                 global level_2
                 level_2 = "finish"
+                player.state = "finish2"
             elif self.level == "3":
                 global level_3
                 level_3 = "finish"
-
-
+            
+global player
 player = Character(32, 370)
