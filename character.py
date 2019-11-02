@@ -1,7 +1,13 @@
 from config import * 
 
-global lists 
-lists = []
+global spikemonster_list
+global monster_list
+global tile_list
+global sky_list
+spikemonster_list = []
+monster_list = []
+tile_list = []
+
 class Character:
     def __init__(self, x, y):
         self.image = assetLibrary['mikenewright']
@@ -62,6 +68,13 @@ class Character:
                 self.move(0,2.5, map_level.tiles)
         if key[pygame.K_UP] == False:
             self.keyRelease = True
+    
+
+
+    def die(self):
+        for spikemonsters in spikemonster_list:
+            if self.rect.colliderect(spikemonsters.rect):
+                return True
 
 class Tile():
     def __init__(self, position, image_name):
@@ -75,12 +88,49 @@ class Ramp():
         self.image = assetLibrary[image]
         
 class Monster():
-    def __init__(self, pos_x, pos_y, image_r, image_l, rect_r, rect_l):
+    def __init__(self, pos_x, pos_y, image_r, image_l, rect_x, rect_y):
+        monster_list.append(self)
         self.direction = 1
+        self.image = assetLibrary[image_l]
+        self.imageL = image_l
+        self.imageR = image_r
+        self.rect = pygame.Rect(pos_x, pos_y, rect_x, rect_y)
+    
+    def move(self, direction_x, direction_y, tiles):
+        if direction_x != 0:
+            if(self.rect.left + direction_x) > 0:
+                if(self.rect.right + direction_x) < 640:
+                    if direction_x > 0:
+                        self.moveForward(direction_x, 0, tiles)
+                    if direction_x < 0:
+                        self.moveForward(direction_x, 0, tiles)
+            if(self.rect.left + direction_x <= 0) or (self.rect.left + direction_x >= 640):
+                self.direction = -self.direction
+
+        if direction_y != 0:
+            self.moveForward(direction_x, direction_y, tiles)
+
+    def moveForward(self, dir_x, dir_y, tiles):
+        self.rect.x += dir_x
+        self.rect.y += dir_y
+
+        for tile in tiles:
+            if self.rect.colliderect(tile.rect):
+                if dir_x > 0:
+                    self.rect.right = tile.rect.left
+                    self.direction = -self.direction
+                elif dir_x < 0:
+                    self.rect.left  = tile.rect.right
+                    self.direction = -self.direction
+                if dir_y > 0:
+                    self.rect.bottom = tile.rect.top
+                if dir_y < 0:
+                    self.rect.top = tile.rect.bottom
+
+
 
 class Spike():
     def __init__(self, pos_x, pos_y, direction, speed):
-        lists.append(self)
         self.image = assetLibrary['spikeblock']
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -111,6 +161,24 @@ class Spike():
                 elif dir_y < 0:
                     self.rect.top = tile.rect.bottom
                     self.speed = -self.speed
+
+class Door():
+    def __init__(self, position, level):
+        self.rect = pygame.Rect(position[0], position[1], 32, 32)
+        self.image = assetLibrary['door']
+        self.level = level
+
+    def onChangeMap(self):
+        if self.rect.colliderect(player.rect):
+            if self.level == "1":
+                global level_1
+                level_1 = "finish"
+            elif self.level == "2":
+                global level_2
+                level_2 = "finish"
+            elif self.level == "3":
+                global level_3
+                level_3 = "finish"
 
 
 player = Character(32, 370)
