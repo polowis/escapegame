@@ -4,6 +4,7 @@ bullet_scale = pygame.transform.scale(assetLibrary['bullet'], (10, 10))
 
 
 def main():
+    """map1"""
     while player.state == "play":
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -29,6 +30,7 @@ def main():
             if spikemonsters.direction == "y":
                 spikemonsters.move(0, spikemonsters.speed, current_map.tiles)
         for spikemonsters in spikemonster_list:
+            pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.rect.width, 5))
             screen.blit(spikemonsters.image, spikemonsters.rect)
         onCollide()
         player.die()
@@ -39,10 +41,15 @@ def main():
 
 
 def onCollide():
+    """Check if bullet hit monster"""
     for bullet in bullet_list:
         for spikemonsters in spikemonster_list:
             if bullet.rect.colliderect(spikemonsters.rect):
-                spikemonsters.rect.x += 1000
+                pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.rect.width - 5, 5))
+                spikemonsters.rect.width -= 5
+                spikemonsters.health -= 5
+                if spikemonsters.health <= 0:
+                    spikemonsters.rect.x += 1000
                 bullet.rect.x += 1000
         for monster in monster_list:
             if bullet.rect.colliderect(monster.rect):
@@ -56,6 +63,7 @@ def Intro():
     mouse = pygame.mouse.get_pressed()
     background_image = pygame.transform.scale(assetLibrary['gameover'], (640, 480))
     screen.blit(background_image, (0, 0))
+    """get mouse position and check if the player click"""
     if 255 + 110 > cursor[0] > 255 and 250 + 25 > cursor[1] > 250:
         pygame.draw.rect(screen, (255, 0, 0), (255, 250, 110, 25))
         if mouse[0] == 1:
@@ -75,6 +83,7 @@ def Intro():
     pygame.display.update()
 
 def clear():
+    """clear everything"""
     global tile_list
     global spikemonster_list
     global player
@@ -83,6 +92,7 @@ def clear():
     del player
 
 def map1():
+    """draw map1"""
     global tile_list
     global spikemonster_list
     tile_list = []
@@ -98,6 +108,7 @@ def map1():
     door = Door((19*32,26*16), "1")
 
 def map2():
+    """draw map2"""
     global tile_list
     global spikemonster_list
     global player
@@ -114,13 +125,31 @@ def map2():
     global door
     door = Door((32,400), "2")
 
+def map3():
+    """draw map3"""
+    global tile_list
+    global spikemonster_list
+    global player
+    global monster_list
+    global image
+    monster_list = []
+    tile_list = []
+    spikemonster_list = []
+    global current_map
+    current_map = Map3()
+    current_map.draw()
+    tile_list  = current_map.tiles
+    spikemonster_list = current_map.spikemonster
+    monster_list = current_map.monster
+    image = pygame.transform.scale(assetLibrary['dungeon'], (640, 480))
+
 def mainloop():
+    """main loop of the game"""
     map1()
     main()
     if player.state == "finish1":
         map2()
         while player.state == "finish1":
-            
             for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -156,16 +185,51 @@ def mainloop():
             player.die()
             door.onChangeMap()
             pygame.display.flip()
-            
             screen.fill(0)
-mainloop()
 
-if player.state == "gameover":
-    while player.state == "gameover":
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-        Intro()
+        
+        if player.state == "finish2":
+            map3()
+            while player.state == "finish2":
+                for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                clock.tick(60)
+                player.handle_input(current_map)
+                
+                screen.blit(image, (0, 0))
+                for tile in tile_list:
+                    screen.blit(tile.image, tile.rect)
+                screen.blit(door.image, door.rect)
+                screen.blit(player.image,player.rect)
+
+                for i in bullet_list:
+                    i.rect.x += i.direction
+                for i in bullet_list:
+                    screen.blit(bullet_scale, i)
+                
+                if player.rect.x < 210:
+                    for spikemonsters in spikemonster_list:
+                        if spikemonsters.direction == "x":
+                            spikemonsters.move(spikemonsters.speed, 0, current_map.tiles)
+                        if spikemonsters.direction == "y":
+                            spikemonsters.move(0, spikemonsters.speed, current_map.tiles)
+                    for spikemonsters in spikemonster_list:
+                        screen.blit(spikemonsters.image, spikemonsters.rect)
+                for monster in monster_list:
+                    monster.move(monster.direction,0, current_map.tiles)
+                    if monster.rect.bottom < 480:
+                            monster.move(0,2, current_map.tiles)
+                for monster in monster_list:
+                    screen.blit(monster.image,monster.rect)
+                onCollide()
+                player.die()
+                door.onChangeMap()
+                pygame.display.flip()
+
+
+
+
 
 
 

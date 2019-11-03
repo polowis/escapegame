@@ -1,6 +1,9 @@
 from game import *
 
-mainloop()
+if __name__ == '__main__':
+    mainloop()
+
+
 if player.state == "gameover":
     while player.state == "gameover":
         for event in pygame.event.get():

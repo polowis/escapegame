@@ -16,7 +16,7 @@ def loadImage(name):
 assetName = ['dinosaur small', 'dinosaur', 'door', 'Dungeontile1', 'gameover', 'guardLEFT', 'guardRIGHT', 'guardWOequipmentR', 'ivypillar', 'ivywall',
             'levelcomplete', 'mike invert', 'mike side', 'mikenewleft', 'mikenewright', 'moon', 'rampleft', 'rampright', 'small mike', 'spikeblock', 'spikes', 
             'spikes2', 'stars', 'stars2', 'stonefloor', 'stonefloor2', 'tile', 'tilebottom', 'tilebottom2', 'tilebottom3',  'tilebottom2dark', 'tiletop', 'tiletop2',
-            'TotoMoving1', 'TotoMoving2', 'Totomoving3', 'TotoStill', 'sky', 'bullet']
+            'TotoMoving1', 'TotoMoving2', 'Totomoving3', 'TotoStill', 'sky', 'bullet', 'dungeon']
             
 assetLibrary = {}
 for i in assetName:

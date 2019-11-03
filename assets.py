@@ -119,8 +119,63 @@ class Map2():
                 x += 32
             y += 16
             x = 0
-        spikemonster = Spike(200, 450, "y", -80)
+        spikemonster = Spike(200, 450, "y", -5)
         spikemonster_list.append(spikemonster)
         self.spikemonster.append(spikemonster)
         monster = Monster(9*32,20*16,"dinosaur","dinosaur small",27,29)
         self.monster.append(monster)
+
+class Map3():
+    def __init__(self):
+        self.tiles = []
+        self.spikemonster = []
+        self.monster = []
+        self.map = ["00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000000000",
+            "00000000000000003333",
+            "00000000000030000000",
+            "00000000000000000000",
+            "00000000003000000000",
+            "00000000000000000000",
+            "00000000030000000000",
+            "00000000000000000000",
+            "00000003000000000000",
+            "00000000000000000000",
+            "00000300000000000000",
+            "00000000000000000000",
+            "33330000000000000000",
+            "44440000000000000000", 
+        ]
+    def draw(self):
+        x = 0
+        y = 0
+        for row in self.map:
+            for key in row:
+                if key == "3":
+                    tile_list.append(Tile((x,y,), 'tiletop'))
+                    self.tiles.append(Tile((x, y), 'stonefloor'))
+                if key == "4":
+                    tile_list.append(Tile((x, y), 'stonefloor2'))
+                    self.tiles.append(Tile((x, y), 'stonefloor2'))
+                x += 32
+            y += 16
+            x = 0
+        
+        monster = Monster()
+
+        

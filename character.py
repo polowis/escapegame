@@ -13,7 +13,6 @@ bullet_list = []
 
 class Character:
     def __init__(self, x, y):
-        
         self.image = assetLibrary['mikenewright']
         self.rect = pygame.Rect(x, y, 16, 30)
         self.face = 'right'
@@ -22,11 +21,14 @@ class Character:
         self.gameOver = False
         self.fall = False
         self.state = "play"
+
     def shoot(self, direction):
+        """player shoot"""
         Bullet(direction)
         
     def getPlayerPosition(self):
-        return self.rect.x, self.rect.y
+        """return player position"""
+        return self.rect
         
     def move(self, direction_x, direction_y, tiles):
         """Move player"""
@@ -48,10 +50,10 @@ class Character:
             self.face = 'left'
 
     def moveForward(self, direction_x, direction_y, tiles):
-        """"""
+        """move player"""
         self.rect.x += direction_x
         self.rect.y += direction_y
-        
+        """check if player hits the block"""
         for tile in tiles:
             if self.rect.colliderect(tile.rect):
                 if direction_x > 0:
@@ -77,17 +79,20 @@ class Character:
                 if self.jump < 20:
                     self.move(0,-5, map_level.tiles)
                     self.jump += 1
+        
         if key[pygame.K_SPACE]:
             if self.face == 'right':
                 self.shoot(2)
             if self.face == "left":
                 self.shoot(-2)
+
         if self.rect.bottom < 480:
                 self.move(0,2.5, map_level.tiles)
         if key[pygame.K_UP] == False:
             self.keyRelease = True
 
     def die(self):
+        """return true if player die"""
         for spikemonsters in spikemonster_list:
             if self.rect.colliderect(spikemonsters.rect):
                 self.state = "gameover"
@@ -97,9 +102,11 @@ class Character:
                 self.state = "gameover"
                 return True
         if self.rect.bottom >= 480:
+            self.state = "gameover"
             return True
 
 class Bullet:
+    """create bullet object"""
     def __init__(self, direction):
         bullet_list.append(self)
         self.rect = pygame.Rect(player.rect.x, player.rect.y + 5, 21, 21)
@@ -170,6 +177,7 @@ class Spike():
         self.rect = pygame.Rect(self.pos_x, self.pos_y, 21, 21)
         self.speed = speed
         self.direction = direction
+        self.health = 40
 
     def move(self, x, y, current_map):
         if x != 0:
