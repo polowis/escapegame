@@ -1,10 +1,8 @@
 from assets import *
 
-def messageScreen(message, color, dislay=0, size="small"):
-    lop = 1
 
-def button(message, color, button_x, button_y, button_width, button_height, size="small"):
-    button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
-    button_rect.center = ((button_x+(button_width/2)), button_y+(button_height/2))
-    screen.blit(font_game.render(message, False, color), button_rect)
+def text(message, color, text_x, text_y, text_width, text_height, size="small"):
+    text_rect = pygame.Rect(text_x, text_y, text_width, text_height)
+    text_rect.center = ((text_x+(text_width/2)), text_y+(text_height/2))
+    screen.blit(font_game.render(message, False, color), text_rect)
 

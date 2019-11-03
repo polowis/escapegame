@@ -92,6 +92,10 @@ class Character:
             if self.rect.colliderect(spikemonsters.rect):
                 self.state = "gameover"
                 return True
+        for monster in monster_list:
+            if self.rect.colliderect(monster.rect):
+                self.state = "gameover"
+                return True
         if self.rect.bottom >= 480:
             return True
 
