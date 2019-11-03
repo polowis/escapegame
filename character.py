@@ -22,12 +22,9 @@ class Character:
         self.gameOver = False
         self.fall = False
         self.state = "play"
-
-    def shoot(self):
-        bullet_image = assetLibrary['bullet']
-        bullet_pos = pygame.Rect(self.rect.x, self.rect.y, self.rect.width, self.rect.height)
-        bullet_list.append(bullet_pos)
-
+    def shoot(self, direction):
+        Bullet(direction)
+        
     def getPlayerPosition(self):
         return self.rect.x, self.rect.y
         
@@ -81,7 +78,10 @@ class Character:
                     self.move(0,-5, map_level.tiles)
                     self.jump += 1
         if key[pygame.K_SPACE]:
-            self.shoot() 
+            if self.face == 'right':
+                self.shoot(2)
+            if self.face == "left":
+                self.shoot(-2)
         if self.rect.bottom < 480:
                 self.move(0,2.5, map_level.tiles)
         if key[pygame.K_UP] == False:
@@ -90,9 +90,18 @@ class Character:
     def die(self):
         for spikemonsters in spikemonster_list:
             if self.rect.colliderect(spikemonsters.rect):
+                self.state = "gameover"
                 return True
         if self.rect.bottom >= 480:
             return True
+
+class Bullet:
+    def __init__(self, direction):
+        bullet_list.append(self)
+        self.rect = pygame.Rect(player.rect.x, player.rect.y + 5, 21, 21)
+        self.direction = direction
+
+    
 
 class Tile():
     def __init__(self, position, image_name):
@@ -120,8 +129,10 @@ class Monster():
                 if(self.rect.right + direction_x) < 640:
                     if direction_x > 0:
                         self.moveForward(direction_x, 0, tiles)
+                        self.image = assetLibrary[self.imageL]
                     if direction_x < 0:
                         self.moveForward(direction_x, 0, tiles)
+                        self.image = assetLibrary[self.imageR]
             if(self.rect.left + direction_x <= 0) or (self.rect.left + direction_x >= 640):
                 self.direction = -self.direction
 

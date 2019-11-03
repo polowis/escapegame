@@ -62,12 +62,15 @@ class Map1():
         
         spikemonster = Spike(50, 360, 'x', 2)
         spikemonster_list.append(spikemonster)
+        self.spikeMonsters.append(spikemonster)
 
         #Monster(40,370,"dinosaur","dinosaur small",27,29)
        
 class Map2():
     def __init__(self):
         self.tiles = []
+        self.spikemonster = []
+        self.monster = []
         self.map = ["00000000000000000000",
             "00000000000000000000",
             "00000000000000000000",
@@ -116,3 +119,8 @@ class Map2():
                 x += 32
             y += 16
             x = 0
+        spikemonster = Spike(200, 450, "y", -80)
+        spikemonster_list.append(spikemonster)
+        self.spikemonster.append(spikemonster)
+        monster = Monster(9*32,20*16,"dinosaur","dinosaur small",27,29)
+        self.monster.append(monster)
