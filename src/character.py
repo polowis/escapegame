@@ -13,7 +13,7 @@ bullet_list = []
 
 class Character:
     def __init__(self, x, y):
-        self.image = assetLibrary['mikenewright']
+        self.image = assetLibrary['playerright']
         self.rect = pygame.Rect(x, y, 16, 30)
         self.face = 'right'
         self.jump = 0
@@ -42,11 +42,11 @@ class Character:
                     self.moveForward(0, direction_y, tiles)
     
         if direction_x > 0:
-            self.image = assetLibrary['mikenewright']
+            self.image = assetLibrary['playerright']
             self.face = 'right'
 
         if direction_x < 0:
-            self.image = assetLibrary['mikenewleft']
+            self.image = assetLibrary['playerleft']
             self.face = 'left'
 
     def moveForward(self, direction_x, direction_y, tiles):
