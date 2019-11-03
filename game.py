@@ -8,6 +8,7 @@ def main():
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+        pygame.display.set_caption("Escape game")
         clock.tick(60)
         player.handle_input(current_map)
         
@@ -63,14 +64,14 @@ def Intro():
     else:
         pygame.draw.rect(screen, (0,0,0), (255, 250, 110, 25))
 
-    if 255 + 120 > cursor[0] > 255 and 300 + 25 > cursor[1] > 250:
-        pygame.draw.rect(screen, (255, 0, 0), (255, 300, 110, 25))
+    if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
+        pygame.draw.rect(screen, (255, 0, 0), (255, 320, 110, 25))
     else:
         pygame.draw.rect(screen, (0, 0, 0), (255, 300, 110, 25))
     
 
     text2 = text('Play again', (0, 70, 255), 255, 250, 110, 25)
-    text3 = text('How to play', (0, 70, 255), 255, 300, 120, 25)
+    text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
     pygame.display.update()
 
 def clear():
