@@ -20,7 +20,9 @@ class Character:
         self.keyRelease = True
         self.gameOver = False
         self.fall = False
-        self.state = "play"
+        self.state = "start"
+        self.coin = 0
+        self.key = ""
 
     def shoot(self, direction):
         """player shoot"""
@@ -95,14 +97,11 @@ class Character:
         """return true if player die"""
         for spikemonsters in spikemonster_list:
             if self.rect.colliderect(spikemonsters.rect):
-                self.state = "gameover"
                 return True
         for monster in monster_list:
             if self.rect.colliderect(monster.rect):
-                self.state = "gameover"
                 return True
         if self.rect.bottom >= 480:
-            self.state = "gameover"
             return True
 
 class Bullet:
@@ -222,6 +221,10 @@ class Door():
             elif self.level == "3":
                 global level_3
                 level_3 = "finish"
-            
+
+class Key:
+    def __init__(self, position, level):
+        self.rect = pygame.Rect(position[0], position[1], 32, 32)
+                   
 global player
 player = Character(32, 370)

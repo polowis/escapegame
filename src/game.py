@@ -2,6 +2,37 @@ from gui import *
 
 bullet_scale = pygame.transform.scale(assetLibrary['bullet'], (10, 10))
 
+def Menu():
+    while player.state == "start":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.set_caption("Escape game")
+        clock.tick(60)
+        cursor = pygame.mouse.get_pos()
+        mouse = pygame.mouse.get_pressed()
+        background_image = pygame.transform.scale(assetLibrary['menu'], (640, 480))
+        screen.blit(background_image, (0, 0))
+        text2 = text('Play', (0, 70, 255), 255, 250, 110, 25)
+        text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
+        if 255 + 110 > cursor[0] > 255 and 250 + 25 > cursor[1] > 250:
+            text2 = text("Play", (255, 0, 0), 255, 250, 110, 25)
+            if mouse[0] == 1:
+                player.state = "play"
+                mainloop()
+        else:
+            text2 = text('Play', (0, 70, 255), 255, 250, 110, 25)
+
+        if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
+            text3 = text('How to play', (255, 0, 0), 255, 320, 120, 25)
+        else:
+            text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
+            
+        
+
+        
+        pygame.display.update()
+
 
 def main():
     """map1"""
@@ -33,7 +64,9 @@ def main():
             pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.rect.width, 5))
             screen.blit(spikemonsters.image, spikemonsters.rect)
         onCollide()
-        player.die()
+        if(player.die()):
+                player.state = "gameover"
+                Intro()
         door.onChangeMap()
         pygame.display.flip()
         
@@ -45,8 +78,7 @@ def onCollide():
     for bullet in bullet_list:
         for spikemonsters in spikemonster_list:
             if bullet.rect.colliderect(spikemonsters.rect):
-                pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.rect.width - 5, 5))
-                spikemonsters.rect.width -= 5
+                pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.health - 5, 5))
                 spikemonsters.health -= 5
                 if spikemonsters.health <= 0:
                     spikemonsters.rect.x += 1000
@@ -58,29 +90,33 @@ def onCollide():
                
 
 def Intro():
-    screen.fill(0)
-    cursor = pygame.mouse.get_pos()
-    mouse = pygame.mouse.get_pressed()
-    background_image = pygame.transform.scale(assetLibrary['gameover'], (640, 480))
-    screen.blit(background_image, (0, 0))
-    """get mouse position and check if the player click"""
-    if 255 + 110 > cursor[0] > 255 and 250 + 25 > cursor[1] > 250:
-        pygame.draw.rect(screen, (255, 0, 0), (255, 250, 110, 25))
-        if mouse[0] == 1:
-            player.state = "play"
-            mainloop()
-    else:
-        pygame.draw.rect(screen, (0,0,0), (255, 250, 110, 25))
+    while player.state == "gameover":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        screen.fill(0)
+        cursor = pygame.mouse.get_pos()
+        mouse = pygame.mouse.get_pressed()
+        background_image = pygame.transform.scale(assetLibrary['gameover'], (640, 480))
+        screen.blit(background_image, (0, 0))
+        """get mouse position and check if the player click"""
+        if 255 + 110 > cursor[0] > 255 and 250 + 25 > cursor[1] > 250:
+            pygame.draw.rect(screen, (255, 0, 0), (255, 250, 110, 25))
+            if mouse[0] == 1:
+                player.state = "play"
+                mainloop()
+        else:
+            pygame.draw.rect(screen, (0,0,0), (255, 250, 110, 25))
 
-    if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
-        pygame.draw.rect(screen, (255, 0, 0), (255, 320, 110, 25))
-    else:
-        pygame.draw.rect(screen, (0, 0, 0), (255, 300, 110, 25))
-    
+        if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
+            pygame.draw.rect(screen, (255, 0, 0), (255, 320, 110, 25))
+        else:
+            pygame.draw.rect(screen, (0, 0, 0), (255, 300, 110, 25))
+            
 
-    text2 = text('Play again', (0, 70, 255), 255, 250, 110, 25)
-    text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
-    pygame.display.update()
+        text2 = text('Play again', (0, 70, 255), 255, 250, 110, 25)
+        text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
+        pygame.display.update()
 
 def clear():
     """clear everything"""
@@ -182,7 +218,9 @@ def mainloop():
             for monster in monster_list:
                 screen.blit(monster.image,monster.rect)
             onCollide()
-            player.die()
+            if(player.die()):
+                player.state = "gameover"
+                Intro()
             door.onChangeMap()
             pygame.display.flip()
             screen.fill(0)

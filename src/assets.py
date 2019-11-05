@@ -175,7 +175,5 @@ class Map3():
                 x += 32
             y += 16
             x = 0
-        
-        monster = Monster()
 
         
