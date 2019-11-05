@@ -4,6 +4,7 @@ bullet_scale = pygame.transform.scale(assetLibrary['bullet'], (10, 10))
 
 def Menu():
     """Menu starting screen"""
+    background_image = pygame.transform.scale(assetLibrary['menu'], (640, 480))
     while player.state == "start":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -12,7 +13,7 @@ def Menu():
         clock.tick(60)
         cursor = pygame.mouse.get_pos()
         mouse = pygame.mouse.get_pressed()
-        background_image = pygame.transform.scale(assetLibrary['menu'], (640, 480))
+        background_image.set_alpha(1)
         screen.blit(background_image, (0, 0))
         text2 = text('Play', (0, 70, 255), 255, 250, 110, 25)
         text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
@@ -70,6 +71,7 @@ def main():
                 player.state = "gameover"
                 Intro()
         door.onChangeMap()
+        key.checkKey()
         pygame.display.flip()
         
         screen.fill(0)
@@ -82,8 +84,8 @@ def onCollide():
             if bullet.rect.colliderect(spikemonsters.rect):
                 pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.health - 5, 5))
                 spikemonsters.health -= 5
-                if spikemonsters.health <= 0:
-                    spikemonsters.rect.x += 1000
+                if spikemonsters.die():
+                    spikemonsters.kill()
                 bullet.rect.x += 1000
         for monster in monster_list:
             if bullet.rect.colliderect(monster.rect):
@@ -241,10 +243,11 @@ def mainloop():
                             pygame.quit()
                 clock.tick(60)
                 player.handle_input(current_map)
-                
-                screen.blit(image, (0, 0))
+                image.set_alpha(120)
+                screen.blit(image,(0, 0))
                 for tile in tile_list:
                     screen.blit(tile.image, tile.rect)
+
                 screen.blit(door.image, door.rect)
                 screen.blit(player.image,player.rect)
 
@@ -268,6 +271,9 @@ def mainloop():
                 for monster in monster_list:
                     screen.blit(monster.image,monster.rect)
                 onCollide()
+                if(player.die()):
+                    player.state = "gameover"
+                    Intro()
                 player.die()
                 door.onChangeMap()
                 pygame.display.flip()

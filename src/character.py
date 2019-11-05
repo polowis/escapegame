@@ -206,6 +206,14 @@ class Spike():
                 elif dir_y < 0:
                     self.rect.top = tile.rect.bottom
                     self.speed = -self.speed
+    
+    def die(self):
+        if self.health <= 0:
+            return True
+        
+    def kill(self):
+        self.rect.x += 1000
+        self.rect.y += 1000
 
 class Door():
     def __init__(self, position, level):
@@ -237,6 +245,7 @@ class Key:
     def checkKey(self):
         if self.rect.colliderect(player.rect):
             inventory.collectKey(self.level)
+            self.rect.x += 1000
     
     
                    
