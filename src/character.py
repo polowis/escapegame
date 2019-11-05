@@ -1,4 +1,5 @@
 from config import * 
+from inventory import *
 
 global spikemonster_list
 global monster_list
@@ -10,6 +11,7 @@ spikemonster_list = []
 monster_list = []
 tile_list = []
 bullet_list = []
+
 
 class Character:
     def __init__(self, x, y):
@@ -26,6 +28,7 @@ class Character:
 
     def shoot(self, direction):
         """player shoot"""
+        #create Bullet
         Bullet(direction)
         
     def getPlayerPosition(self):
@@ -94,7 +97,7 @@ class Character:
             self.keyRelease = True
 
     def die(self):
-        """return true if player die"""
+        """return true if player dies"""
         for spikemonsters in spikemonster_list:
             if self.rect.colliderect(spikemonsters.rect):
                 return True
@@ -110,6 +113,7 @@ class Bullet:
         bullet_list.append(self)
         self.rect = pygame.Rect(player.rect.x, player.rect.y + 5, 21, 21)
         self.direction = direction
+        """get player's position and update the bullet"""
 
     
 
@@ -134,6 +138,7 @@ class Monster():
         self.rect = pygame.Rect(pos_x, pos_y, rect_x, rect_y)
     
     def move(self, direction_x, direction_y, tiles):
+        """Monster moves"""
         if direction_x != 0:
             if(self.rect.left + direction_x) > 0:
                 if(self.rect.right + direction_x) < 640:
@@ -152,7 +157,7 @@ class Monster():
     def moveForward(self, dir_x, dir_y, tiles):
         self.rect.x += dir_x
         self.rect.y += dir_y
-
+        # if target collides, change direction. 
         for tile in tiles:
             if self.rect.colliderect(tile.rect):
                 if dir_x > 0:
@@ -211,9 +216,10 @@ class Door():
     def onChangeMap(self):
         if self.rect.colliderect(player.rect):
             if self.level == "1":
-                global level_1
-                level_1 = "finish"
-                player.state = "finish1"
+                if inventory.keyIsAvailable('key1'):
+                    global level_1
+                    level_1 = "finish"
+                    player.state = "finish1"
             elif self.level == "2":
                 global level_2
                 level_2 = "finish"
@@ -225,6 +231,15 @@ class Door():
 class Key:
     def __init__(self, position, level):
         self.rect = pygame.Rect(position[0], position[1], 32, 32)
+        self.image = pygame.transform.scale(assetLibrary['key'], (25, 25))
+        self.level = level
+    
+    def checkKey(self):
+        if self.rect.colliderect(player.rect):
+            inventory.collectKey(self.level)
+    
+    
                    
 global player
 player = Character(32, 370)
+inventory = Inventory(player)

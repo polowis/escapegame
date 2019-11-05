@@ -42,6 +42,7 @@ class Map1():
         self.spikeMonsters = []
 
     def draw(self):
+        """Replace number with image"""
         x = 0
         y = 0
         for row in self.map:

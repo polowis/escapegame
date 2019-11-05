@@ -3,6 +3,7 @@ from gui import *
 bullet_scale = pygame.transform.scale(assetLibrary['bullet'], (10, 10))
 
 def Menu():
+    """Menu starting screen"""
     while player.state == "start":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -49,6 +50,7 @@ def main():
             screen.blit(tile.image, tile.rect)
         screen.blit(door.image, door.rect)
         screen.blit(player.image,player.rect)
+        screen.blit(key.image, key.rect)
         
         for i in bullet_list:
             i.rect.x += i.direction
@@ -90,6 +92,7 @@ def onCollide():
                
 
 def Intro():
+    """When player dies"""
     while player.state == "gameover":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -129,6 +132,7 @@ def clear():
 
 def map1():
     """draw map1"""
+    #clear all the lists and update new list
     global tile_list
     global spikemonster_list
     tile_list = []
@@ -140,8 +144,10 @@ def map1():
     spikemonster_list = current_map.spikeMonsters
     global image
     global door
+    global key
     image = pygame.transform.scale(assetLibrary['sky'], (640, 480))
     door = Door((19*32,26*16), "1")
+    key = Key((400, 300), "key1")
 
 def map2():
     """draw map2"""
@@ -163,6 +169,7 @@ def map2():
 
 def map3():
     """draw map3"""
+
     global tile_list
     global spikemonster_list
     global player
@@ -267,14 +274,5 @@ def mainloop():
 
 
 
-
-
-
-
-
-
-    
-
-    
 
     
