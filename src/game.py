@@ -86,7 +86,7 @@ def onCollide():
                 spikemonsters.health -= 5
                 if spikemonsters.die():
                     spikemonsters.kill()
-                bullet.rect.x += 1000
+                bullet.kill()
         for monster in monster_list:
             if bullet.rect.colliderect(monster.rect):
                 monster.rect.x += 1000
@@ -243,7 +243,6 @@ def mainloop():
                             pygame.quit()
                 clock.tick(60)
                 player.handle_input(current_map)
-                image.set_alpha(120)
                 screen.blit(image,(0, 0))
                 for tile in tile_list:
                     screen.blit(tile.image, tile.rect)

@@ -115,6 +115,9 @@ class Bullet:
         self.direction = direction
         """get player's position and update the bullet"""
 
+    def kill(self):
+        self.rect.x += 1000
+        self.rect.y += 1000
     
 
 class Tile():
