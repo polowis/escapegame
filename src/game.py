@@ -6,6 +6,9 @@ The third level is the hardest. The player has to dodge incoming bullets
 We represent the bullet in white circle and the player need to manage to get close to
 the boss in order to kill him. Player can upgrade weapon damage in shop. 
 Player can earn coin by killing monsters
+
+There is an issue with changing stage when game is over. However by clicking on back to menu continiously
+will eventually get back to menu stage.
 """
 
 
@@ -209,33 +212,29 @@ def how_to_play():
 
 def Intro():
     """When player dies"""
+    background_a = pygame.transform.scale(pygame.image.load('asset/howtoplay.jpg').convert(), (640, 480))
     while player.state == "gameover":
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-        screen.fill(0)
+        
+        screen.blit(background_a, (0,0))
+        pygame.display.set_caption("Escape game")
         cursor = pygame.mouse.get_pos()
         mouse = pygame.mouse.get_pressed()
-        background_image = pygame.transform.scale(assetLibrary['menu'], (640, 480))
-        screen.blit(background_image, (0, 0))
-        """get mouse position and check if the player click"""
-        if 255 + 110 > cursor[0] > 255 and 250 + 25 > cursor[1] > 250:
-            pygame.draw.rect(screen, (255, 0, 0), (255, 250, 110, 25))
-            if mouse[0] == 1:
-                player.state = "play"
-                mainloop()
-        else:
-            pygame.draw.rect(screen, (0,0,0), (255, 250, 110, 25))
-
+        clock.tick(60)
+        text4 = text('Game over', (0, 70, 255), 255, 250, 110, 25)
         if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
-            pygame.draw.rect(screen, (255, 0, 0), (255, 320, 110, 25))
+            text5 = text('Back to menu', (255, 0, 0), 255, 320, 120, 25)
+            if mouse[0] == 1:
+                player.state = "start"
+                Menu()
         else:
-            pygame.draw.rect(screen, (0, 0, 0), (255, 300, 110, 25))
-            
+            text5 = text('Back to menu', (0, 70, 255), 255, 320, 120, 25)
 
-        text2 = text('Play again', (0, 70, 255), 255, 250, 110, 25)
-        text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
-        pygame.display.update()
+        pygame.display.flip()   
+        screen.fill(0)         
 
 def clear():
     """clear everything"""
