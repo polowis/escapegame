@@ -1,6 +1,7 @@
 
 """
 author: Polowis
+Contain some useful user interface grids. 
 """
 
 from assets import *

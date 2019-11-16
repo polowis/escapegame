@@ -287,8 +287,15 @@ class Boss:
         self.imageL = image_l
         self.imageR = image_r
         self.rect = pygame.Rect(pos_x, pos_y, rect_x, rect_y)
-        self.health = 100
-                   
+        self.health = 1000
+    def die(self):
+        if self.health <= 0:
+            return True
+        
+    def kill(self):
+        self.rect.x += 1000
+        self.rect.y += 1000
+
 global player
 player = Character(32, 370)
 inventory = Inventory(player)

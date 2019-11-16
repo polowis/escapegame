@@ -1,3 +1,8 @@
+"""
+When run the application, this is where the code will be executed first. 
+This part of code responsible for creating basic layout and information for the game
+Such as create window, loading all images from assets folders, set font size.
+"""
 import pygame
 
 pygame.init()
@@ -16,7 +21,7 @@ def loadImage(name):
 assetName = ['dinosaur small', 'dinosaur', 'door', 'Dungeontile1', 'gameover', 'guardLEFT', 'guardRIGHT', 'guardWOequipmentR', 'ivypillar', 'ivywall',
             'levelcomplete', 'mike invert', 'mike side', 'playerleft', 'playerright', 'moon', 'rampleft', 'rampright', 'small mike', 'spikeblock', 'spikes', 
             'spikes2', 'stars', 'stars2', 'stonefloor', 'stonefloor2', 'tile', 'tilebottom', 'tilebottom2', 'tilebottom3',  'tilebottom2dark', 'tiletop', 'tiletop2',
-            'TotoMoving1', 'TotoMoving2', 'Totomoving3', 'TotoStill', 'sky', 'bullet', 'dungeon', 'menu', 'key']
+             'sky', 'bullet', 'dungeon', 'menu', 'key']
             
 assetLibrary = {}
 for i in assetName:

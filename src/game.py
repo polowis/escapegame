@@ -1,3 +1,14 @@
+"""
+Game: Use arrow keys to move, use space to shoot
+This game has 3 levels in total
+Pick up keys along the way to unlock the next door
+The third level is the hardest. The player has to dodge incoming bullets
+We represent the bullet in white circle and the player need to manage to get close to
+the boss in order to kill him. Player can upgrade weapon damage in shop. 
+Player can earn coin by killing monsters
+"""
+
+
 from gui import *
 import random
 
@@ -35,6 +46,14 @@ def Menu():
                 how_to_play()
         else:
             text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
+        
+        if 255 + 110 > cursor[0] > 255 and 200 + 25 > cursor[1] > 200:
+            text4 = text('Shop', (255, 0, 0), 255, 200, 110, 25)
+            if mouse[0] == 1:
+                player.state = "upgrade"
+                upgrade()
+        else:
+            text4 = text('Shop', (0, 70, 255), 255, 200, 110, 25)
             
         
 
@@ -109,6 +128,7 @@ def onCollide():
                 spikemonsters.health -= player.damage
                 if spikemonsters.die():
                     spikemonsters.kill()
+                    player.coin += 1
                 bullet.kill()
         for monster in monster_list:
             monsterHealthBar = pygame.draw.rect(screen, (255, 0, 0), (monster.rect.x, monster.rect.y - 10, monster.health, 5))
@@ -117,7 +137,49 @@ def onCollide():
                 monster.health -= player.damage
                 if monster.die():
                     monster.kill()
+                    player.coin += 1
                 bullet.kill()
+        for boss in boss_list:
+            bossHealthBar = pygame.draw.rect(screen, (255, 0, 0), (boss.rect.x, boss.rect.y -10, boss.health, 5))
+            if bullet.rect.colliderect(boss.rect):
+                bossHealthBar.width -= 5
+                boss.health -= player.damage
+                if boss.die():
+                    player.coin += 1
+                    boss.kill()
+def upgrade():
+    background_a = pygame.transform.scale(pygame.image.load('asset/howtoplay.jpg').convert(), (640, 480))
+    while player.state == "upgrade":
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        
+        screen.blit(background_a, (0,0))
+        pygame.display.set_caption("Escape game")
+        cursor = pygame.mouse.get_pos()
+        mouse = pygame.mouse.get_pressed()
+        clock.tick(60)
+        text3 = text('player coin: ' + str(player.coin), (255, 0, 0), 255, 200, 110, 25)
+        if 255 + 110 > cursor[0] > 255 and 250 + 25 > cursor[1] > 250:
+            text4 = text('Click to upgrade damage', (255, 0, 0), 255, 250, 110, 25)
+            if mouse[0] == 1:
+                if player.coin - 1 > 0:
+                    player.damage += 1
+                else:
+                    player.coin = 0
+        else:
+            text4 = text('Click to upgrade damage', (0, 70, 255), 255, 250, 110, 25)
+        if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
+            text5 = text('Back to menu', (255, 0, 0), 255, 320, 120, 25)
+            if mouse[0] == 1:
+                player.state = "start"
+                Menu()
+        else:
+            text5 = text('Back to menu', (0, 70, 255), 255, 320, 120, 25)
+
+        pygame.display.flip()   
+        screen.fill(0)           
 
 def how_to_play():
     
@@ -154,7 +216,7 @@ def Intro():
         screen.fill(0)
         cursor = pygame.mouse.get_pos()
         mouse = pygame.mouse.get_pressed()
-        background_image = pygame.transform.scale(assetLibrary['gameover'], (640, 480))
+        background_image = pygame.transform.scale(assetLibrary['menu'], (640, 480))
         screen.blit(background_image, (0, 0))
         """get mouse position and check if the player click"""
         if 255 + 110 > cursor[0] > 255 and 250 + 25 > cursor[1] > 250:

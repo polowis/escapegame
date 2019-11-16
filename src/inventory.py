@@ -1,3 +1,6 @@
+"""
+This is player's invetory, allow player to keep the key for the next map
+"""
 class Inventory:
     def __init__(self, player):
         self.player = player

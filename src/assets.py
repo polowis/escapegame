@@ -1,4 +1,6 @@
-
+"""
+This is map layout, how to draw the map, traps and enemies. 
+"""
 from character import *
 
 class Map1():
