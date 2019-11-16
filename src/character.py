@@ -25,6 +25,7 @@ class Character:
         self.state = "start"
         self.coin = 0
         self.key = ""
+        self.damage = 5
 
     def shoot(self, direction):
         """player shoot"""
@@ -71,14 +72,25 @@ class Character:
                     self.keyRelease = False
                 elif direction_y < 0:
                     self.rect.top = tile.rect.bottom
-    
+
+    def scrollX(self, screenSurf, offsetX):
+        width, height = screenSurf.get_size()
+        copySurf = screenSurf.copy()
+        screenSurf.blit(copySurf, (offsetX, 0))
+        if offsetX < 0:
+            screenSurf.blit(copySurf, (width + offsetX, 0), (0, 0, -offsetX, height))
+        else:
+            screenSurf.blit(copySurf, (0, 0), (width - offsetX, 0, offsetX, height))
+
     def handle_input(self, map_level):
         """Handle key input"""
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT]:
             player.move(-2,0, map_level.tiles)
+            self.scrollX(screen, -8)
         if key[pygame.K_RIGHT]:
             player.move(2,0, map_level.tiles)
+            self.scrollX(screen, 8)
         if key[pygame.K_UP]:
             if self.keyRelease: 
                 if self.jump < 20:
@@ -139,6 +151,7 @@ class Monster():
         self.imageL = image_l
         self.imageR = image_r
         self.rect = pygame.Rect(pos_x, pos_y, rect_x, rect_y)
+        self.health = 100
     
     def move(self, direction_x, direction_y, tiles):
         """Monster moves"""
@@ -173,7 +186,13 @@ class Monster():
                     self.rect.bottom = tile.rect.top
                 if dir_y < 0:
                     self.rect.top = tile.rect.bottom
-
+    def die(self):
+        if self.health <= 0:
+            return True
+        
+    def kill(self):
+        self.rect.x += 1000
+        self.rect.y += 1000
 
 
 class Spike():
@@ -246,10 +265,17 @@ class Key:
         self.level = level
     
     def checkKey(self):
+        """Check if player collides key"""
         if self.rect.colliderect(player.rect):
             inventory.collectKey(self.level)
             self.rect.x += 1000
-    
+
+class Enemy_bullet:
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+        self.change_x = 0
+        self.change_y = 0
     
                    
 global player

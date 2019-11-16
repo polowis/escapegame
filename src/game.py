@@ -1,14 +1,17 @@
 from gui import *
+import random
 
 bullet_scale = pygame.transform.scale(assetLibrary['bullet'], (10, 10))
 
 def Menu():
     """Menu starting screen"""
     background_image = pygame.transform.scale(assetLibrary['menu'], (640, 480))
+    background_x = background_image.get_rect()
     while player.state == "start":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+        
         pygame.display.set_caption("Escape game")
         clock.tick(60)
         cursor = pygame.mouse.get_pos()
@@ -27,6 +30,9 @@ def Menu():
 
         if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
             text3 = text('How to play', (255, 0, 0), 255, 320, 120, 25)
+            if mouse[0] == 1:
+                player.state = "howtoplay"
+                how_to_play()
         else:
             text3 = text('How to play', (0, 70, 255), 255, 320, 120, 25)
             
@@ -34,9 +40,25 @@ def Menu():
 
         
         pygame.display.update()
+        screen.fill(0)
 
+def make_bullet():
+    """
+    Function to make a new, random circle.
+    """
+    eBullet = Enemy_bullet()
+    
+    eBullet.x = random.randrange(10, width - 10)
+    eBullet.y = random.randrange(10, height - 10)
+ 
+    # Speed and direction of rectangle
+    eBullet.change_x = random.randrange(-2, 3)
+    eBullet.change_y = random.randrange(-2, 3)
+ 
+    return eBullet       
 
 def main():
+    
     """map1"""
     while player.state == "play":
         for event in pygame.event.get():
@@ -81,17 +103,47 @@ def onCollide():
     """Check if bullet hit monster"""
     for bullet in bullet_list:
         for spikemonsters in spikemonster_list:
+            spikemonsterHealthBar = pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.health, 5))
             if bullet.rect.colliderect(spikemonsters.rect):
-                pygame.draw.rect(screen, (255, 0, 0), (spikemonsters.rect.x, spikemonsters.rect.y - 10, spikemonsters.health - 5, 5))
-                spikemonsters.health -= 5
+                spikemonsterHealthBar.width -= 5
+                spikemonsters.health -= player.damage
                 if spikemonsters.die():
                     spikemonsters.kill()
                 bullet.kill()
         for monster in monster_list:
+            monsterHealthBar = pygame.draw.rect(screen, (255, 0, 0), (monster.rect.x, monster.rect.y - 10, monster.health, 5))
             if bullet.rect.colliderect(monster.rect):
-                monster.rect.x += 1000
-                bullet.rect.x += 1000
-               
+                monsterHealthBar.width -= 5
+                monster.health -= player.damage
+                if monster.die():
+                    monster.kill()
+                bullet.kill()
+
+def how_to_play():
+    
+    background_a = pygame.transform.scale(pygame.image.load('asset/howtoplay.jpg').convert(), (640, 480))
+    while player.state == "howtoplay":
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        
+        screen.blit(background_a, (0,0))
+        pygame.display.set_caption("Escape game")
+        cursor = pygame.mouse.get_pos()
+        mouse = pygame.mouse.get_pressed()
+        clock.tick(60)
+        text4 = text('Use arrow key to move, \n press space to shoot', (0, 70, 255), 255, 250, 110, 25)
+        if 255 + 120 > cursor[0] > 255 and 320 + 25 > cursor[1] > 320:
+            text5 = text('Back to menu', (255, 0, 0), 255, 320, 120, 25)
+            if mouse[0] == 1:
+                player.state = "start"
+                Menu()
+        else:
+            text5 = text('Back to menu', (0, 70, 255), 255, 320, 120, 25)
+
+        pygame.display.flip()   
+        screen.fill(0)           
 
 def Intro():
     """When player dies"""
@@ -237,6 +289,14 @@ def mainloop():
         
         if player.state == "finish2":
             map3()
+            speed = [2, 2]
+            
+            eBullet_list = []
+ 
+            
+            for i in range(10):
+                eBullet = make_bullet()
+                eBullet_list.append(eBullet)
             while player.state == "finish2":
                 for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -269,6 +329,24 @@ def mainloop():
                             monster.move(0,2, current_map.tiles)
                 for monster in monster_list:
                     screen.blit(monster.image,monster.rect)
+                for bullet in eBullet_list:
+                    # Move the ball's center
+                    bullet.x += bullet.change_x
+                    bullet.y += bullet.change_y
+        
+                    # Bounce the ball if needed
+                for bullet in eBullet_list:
+                    if bullet.y > height - 10 or bullet.y < 10:
+                        bullet.change_y *= -1
+                    if bullet.x > width - 10 or bullet.x < 10:
+                        bullet.change_x *= -1
+
+                # Draw the balls
+                for bullet in eBullet_list:
+                    enemy_bullet = pygame.draw.circle(screen, (255, 255, 255), [bullet.x, bullet.y], 10)
+                    if player.rect.colliderect(enemy_bullet):
+                        player.state = "gameover"
+                        Intro()
                 onCollide()
                 if(player.die()):
                     player.state = "gameover"
