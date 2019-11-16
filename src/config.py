@@ -19,8 +19,8 @@ def loadImage(name):
     return pygame.image.load("asset/" + name + ".gif").convert()
 
 assetName = ['dinosaur small', 'dinosaur', 'door', 'Dungeontile1', 'gameover', 'guardLEFT', 'guardRIGHT', 'guardWOequipmentR', 'ivypillar', 'ivywall',
-            'levelcomplete', 'mike invert', 'mike side', 'playerleft', 'playerright', 'moon', 'rampleft', 'rampright', 'small mike', 'spikeblock', 'spikes', 
-            'spikes2', 'stars', 'stars2', 'stonefloor', 'stonefloor2', 'tile', 'tilebottom', 'tilebottom2', 'tilebottom3',  'tilebottom2dark', 'tiletop', 'tiletop2',
+            'levelcomplete', 'mike invert', 'mike side', 'playerleft', 'playerright', 'moon','small mike', 'spikeblock', 'spikes', 
+            'spikes2', 'stonefloor', 'stonefloor2', 'tile', 'tilebottom', 'tilebottom2', 'tilebottom3',  'tilebottom2dark', 'tiletop', 'tiletop2',
              'sky', 'bullet', 'dungeon', 'menu', 'key']
             
 assetLibrary = {}
