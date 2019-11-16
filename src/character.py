@@ -7,11 +7,12 @@ global tile_list
 global sky_list
 global level_1
 global bullet_list
+global boss_list
 spikemonster_list = []
 monster_list = []
 tile_list = []
 bullet_list = []
-
+boss_list = []
 
 class Character:
     def __init__(self, x, y):
@@ -251,9 +252,10 @@ class Door():
                     level_1 = "finish"
                     player.state = "finish1"
             elif self.level == "2":
-                global level_2
-                level_2 = "finish"
-                player.state = "finish2"
+                if inventory.keyIsAvailable('key2'):
+                    global level_2
+                    level_2 = "finish"
+                    player.state = "finish2"
             elif self.level == "3":
                 global level_3
                 level_3 = "finish"
@@ -276,7 +278,16 @@ class Enemy_bullet:
         self.y = 0
         self.change_x = 0
         self.change_y = 0
-    
+
+class Boss:
+    def __init__(self, pos_x, pos_y, image_r, image_l, rect_x, rect_y):
+        monster_list.append(self)
+        self.direction = 1
+        self.image = assetLibrary[image_l]
+        self.imageL = image_l
+        self.imageR = image_r
+        self.rect = pygame.Rect(pos_x, pos_y, rect_x, rect_y)
+        self.health = 100
                    
 global player
 player = Character(32, 370)

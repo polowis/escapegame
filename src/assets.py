@@ -131,6 +131,7 @@ class Map3():
         self.tiles = []
         self.spikemonster = []
         self.monster = []
+        self.boss = []
         self.map = ["00000000000000000000",
             "00000000000000000000",
             "00000000000000000000",
@@ -176,5 +177,7 @@ class Map3():
                 x += 32
             y += 16
             x = 0
+        boss = Boss(520, 240, "guardLEFT", "guardRIGHT", 27, 27)
+        self.boss.append(boss)
 
         

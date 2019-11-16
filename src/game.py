@@ -189,6 +189,8 @@ def map1():
     #clear all the lists and update new list
     global tile_list
     global spikemonster_list
+    global boss_list
+    boss_list = []
     tile_list = []
     spikemonster_list = []
     global current_map
@@ -209,6 +211,8 @@ def map2():
     global spikemonster_list
     global player
     global monster_list
+    global boss_list
+    boss_list = []
     monster_list = []
     tile_list = []
     spikemonster_list = []
@@ -219,7 +223,9 @@ def map2():
     spikemonster_list = current_map.spikemonster
     monster_list = current_map.monster
     global door
+    global key
     door = Door((32,400), "2")
+    key = Key((400, 300), "key2")
 
 def map3():
     """draw map3"""
@@ -229,9 +235,11 @@ def map3():
     global player
     global monster_list
     global image
+    global boss_list
     monster_list = []
     tile_list = []
     spikemonster_list = []
+    boss_list = []
     global current_map
     current_map = Map3()
     current_map.draw()
@@ -239,6 +247,7 @@ def map3():
     spikemonster_list = current_map.spikemonster
     monster_list = current_map.monster
     image = pygame.transform.scale(assetLibrary['dungeon'], (640, 480))
+    boss_list = current_map.boss
 
 def mainloop():
     """main loop of the game"""
@@ -257,6 +266,7 @@ def mainloop():
             for tile in tile_list:
                 screen.blit(tile.image, tile.rect)
             screen.blit(door.image, door.rect)
+            screen.blit(key.image, key.rect)
             screen.blit(player.image,player.rect)
 
             for i in bullet_list:
@@ -283,6 +293,7 @@ def mainloop():
                 player.state = "gameover"
                 Intro()
             door.onChangeMap()
+            key.checkKey()
             pygame.display.flip()
             screen.fill(0)
 
@@ -329,6 +340,8 @@ def mainloop():
                             monster.move(0,2, current_map.tiles)
                 for monster in monster_list:
                     screen.blit(monster.image,monster.rect)
+                for boss in boss_list:
+                    screen.blit(boss.image, boss.rect)
                 for bullet in eBullet_list:
                     # Move the ball's center
                     bullet.x += bullet.change_x
